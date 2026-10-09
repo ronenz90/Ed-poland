@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>עדים במדים 2026</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap">
+<style>
+/* Layout: sticky control bar over a single reading column; timeline rows with a time gutter, dress-code colour as the one running signal. */
+:root{
+  --bg:#f3f7f6; --surface:#ffffff; --ink:#12272b; --muted:#566b6f; --line:#dce6e4;
+  --accent:#0f6b73; --accent-soft:#dff0ef; --on-accent:#ffffff;
+  --m:#55663a; --m-bg:#e9efdc;
+  --h:#3b5d8a; --h-bg:#e2ebf6;
+  --c:#97661a; --c-bg:#f8ecd6;
+  --warn:#b4541a; --warn-bg:#fbe9de;
+  --rain:#2f6fb3; --good:#2e7d52; --good-bg:#e1f2e8;
+  --shadow:0 1px 2px rgba(18,39,43,.06),0 4px 14px rgba(18,39,43,.05);
+  --f-display:"Frank Ruhl Libre","David Libre",Georgia,serif;
+  --f-body:"Assistant","Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1a1c; --surface:#16262a; --ink:#e7f0ef; --muted:#9db3b6; --line:#27393d;
+  --accent:#5fc1c9; --accent-soft:#183b3f; --on-accent:#08191b;
+  --m:#b5c98a; --m-bg:#25301a;
+  --h:#8db4e6; --h-bg:#1b2c42;
+  --c:#e2b46c; --c-bg:#3a2d14;
+  --warn:#f0a275; --warn-bg:#3b2315;
+  --rain:#7db4ee; --good:#7fd0a0; --good-bg:#17301f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1a1c; --surface:#16262a; --ink:#e7f0ef; --muted:#9db3b6; --line:#27393d;
+  --accent:#5fc1c9; --accent-soft:#183b3f; --on-accent:#08191b;
+  --m:#b5c98a; --m-bg:#25301a;
+  --h:#8db4e6; --h-bg:#1b2c42;
+  --c:#e2b46c; --c-bg:#3a2d14;
+  --warn:#f0a275; --warn-bg:#3b2315;
+  --rain:#7db4ee; --good:#7fd0a0; --good-bg:#17301f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.25);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;direction:rtl;padding-inline:16px;padding-block:0 48px;margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin-inline:auto}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0;text-wrap:balance}
+.num{font-variant-numeric:tabular-nums}
+
+/* top */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:20px 12px}
+.top h1{font-size:clamp(1.7rem,5vw,2.5rem);font-weight:900}
+.top .sub{color:var(--muted);margin-top:4px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;min-height:40px}
+.btn:hover{border-color:var(--accent)}
+
+/* sticky controls */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.bar-in{max-width:1120px;margin-inline:auto;display:flex;flex-direction:column;gap:8px}
+.seg{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;overflow-x:auto}
+.seg button{flex:1 0 auto;border:0;background:transparent;border-radius:9px;padding:8px 12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.dchip{flex:1 0 auto;min-width:78px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:6px 10px;text-align:center;line-height:1.25}
+.dchip b{display:block;font-size:.95rem}
+.dchip span{font-size:.78rem;color:var(--muted)}
+.dchip[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.dchip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-start:4px}
+
+main{padding-block:16px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.card h2{font-size:1.25rem;margin-bottom:10px}
+.card h3{font-size:1.05rem;margin-bottom:6px}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+
+/* now card */
+.now{border-color:var(--accent);background:linear-gradient(0deg,var(--accent-soft),var(--accent-soft)),var(--surface)}
+.now .big{font-family:var(--f-display);font-size:1.5rem;font-weight:700}
+.now .cd{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.cd div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 12px;text-align:center;min-width:64px}
+.cd b{display:block;font-size:1.4rem}
+.cd span{font-size:.75rem;color:var(--muted)}
+
+/* chips */
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:600;white-space:nowrap}
+.d-M{background:var(--m-bg);color:var(--m)} .d-H{background:var(--h-bg);color:var(--h)} .d-C{background:var(--c-bg);color:var(--c)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.good{background:var(--good-bg);color:var(--good)} .pill.acc{background:var(--accent-soft);color:var(--accent)}
+.pill.n{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.pill.rain{background:var(--accent-soft);color:var(--rain)}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+.sw-M{background:var(--m)} .sw-H{background:var(--h)} .sw-C{background:var(--c)}
+
+/* day head */
+.dayhead{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start}
+.dayhead h2{font-size:1.6rem;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.wxrow{display:flex;gap:10px;flex-wrap:wrap}
+.wxbox{border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:150px;flex:1 1 150px}
+.wxbox b{font-size:1.15rem}
+.est{font-size:.75rem;color:var(--muted)}
+
+/* timeline */
+.tl{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.time{font-weight:700;font-size:.95rem;line-height:1.2}
+.time small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
+.row .body{min-width:0;border-inline-start:4px solid var(--line);padding-inline-start:12px}
+.row.d-Mr .body{border-color:var(--m)} .row.d-Hr .body{border-color:var(--h)} .row.d-Cr .body{border-color:var(--c)}
+.ttl{font-weight:700}
+.note{color:var(--muted);font-size:.92rem;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.row.live{background:var(--accent-soft);border-radius:10px;padding-inline:8px;margin-inline:-8px}
+.row.past{opacity:.55}
+.chg{margin:6px 0;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn);font-size:.9rem;font-weight:600}
+.drive{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin-block:2px}
+
+/* two-day */
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.two .row{grid-template-columns:58px 1fr;gap:8px}
+
+/* hourly */
+.hr{display:grid;grid-template-columns:54px 62px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line);align-items:start}
+.hr:first-child{border-top:0}
+.hr .h{font-weight:700}
+.hr.live{background:var(--accent-soft);border-radius:10px;padding-inline:8px;margin-inline:-8px}
+.hr.dark{background:linear-gradient(0deg,rgba(0,0,0,.05),rgba(0,0,0,.05))}
+.hr .t{font-size:.92rem}
+.hr .t small{display:block;color:var(--muted)}
+.hitem{padding:4px 0 4px 0;border-inline-start:4px solid var(--line);padding-inline-start:10px;margin-bottom:4px}
+.hitem.d-Mr{border-color:var(--m)} .hitem.d-Hr{border-color:var(--h)} .hitem.d-Cr{border-color:var(--c)}
+.sun{font-size:.82rem;color:var(--warn);font-weight:600}
+
+/* trip */
+.trip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.trip .card{display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:start}
+.trip .card:hover{border-color:var(--accent)}
+.range{position:relative;height:8px;background:var(--line);border-radius:999px;margin-block:6px}
+.range i{position:absolute;top:0;bottom:0;border-radius:999px;background:var(--accent)}
+.scale{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+
+/* pack */
+.pk{display:flex;flex-direction:column;gap:2px}
+.pk label{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:8px;cursor:pointer}
+.pk label:hover{background:var(--bg)}
+.pk input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+.pk input:checked+span{text-decoration:line-through;color:var(--muted)}
+.prog{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--good);width:0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.8rem}
+.scroll{overflow-x:auto}
+.sim{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+.sim input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;min-height:40px}
+.src a{color:var(--accent)}
+.src li{margin-bottom:4px}
+.flag{border-inline-start:4px solid var(--warn);padding-inline-start:12px;margin-block:8px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app" dir="rtl" lang="he" class="wrap">
+  <header class="top">
+    <div>
+      <h1>עדים במדים · מסע לפולין</h1>
+      <div class="sub">11–15 באוקטובר 2026 · לו״ז, לבוש, נסיעות ומזג אוויר</div>
+    </div>
+    <div class="tools">
+      <button class="btn" id="tzBtn" type="button" aria-label="החלפת שעון תצוגה"></button>
+      <button class="btn" id="themeBtn" type="button" aria-label="מצב בהיר או כהה">מצב כהה</button>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <div class="seg" role="group" aria-label="תצוגה" id="views">
+        <button type="button" data-v="day" aria-pressed="true">יומי</button>
+        <button type="button" data-v="two" aria-pressed="false">דו־יומי</button>
+        <button type="button" data-v="hour" aria-pressed="false">שעתי</button>
+        <button type="button" data-v="trip" aria-pressed="false">כל המסע</button>
+        <button type="button" data-v="pack" aria-pressed="false">ציוד</button>
+      </div>
+      <div class="days" id="days" role="group" aria-label="בחירת יום"></div>
+    </div>
+  </div>
+
+  <main id="main" aria-live="polite"></main>
+
+  <footer class="card src" id="foot" style="margin-top:16px"></footer>
+</div>
+<script>
+/* ---------- DATA ----------
+Item = [start, end, title, note, kind, dress, place, prayer, changeHint, tz]
+kind: fly bus tour meal cer free prep rest · dress: M מדים, H חצי א׳, C אזרחי
+Times are Poland time unless tz = "IL" (Israel time). Poland is one hour behind Israel during the trip. */
+var DRESS = {M:"מדים", H:"חצי א׳", C:"אזרחי"};
+var KIND = {fly:"טיסה",bus:"נסיעה",tour:"הדרכה",meal:"ארוחה",cer:"טקס",free:"זמן חופשי",prep:"לוגיסטיקה",rest:"מנוחה"};
+var DOW = ["ראשון","שני","שלישי","רביעי","חמישי"];
+
+var DAYS = [
+{id:1,date:11,title:"ורשה ופתיחת המסע",sites:"נתב״ג · ורשה · בית העלמין באוקופובה · גטו ורשה · מילא 18",
+ sun:{rise:"",set:"17:51",dark:"18:25"},hotel:"Arche Hotel, נלנצ׳וב (כ־25 ק״מ מלובלין)",dressTxt:"אזרחי כל היום",place:"war",
+ items:[
+["02:00","05:55","התייצבות בנתב״ג · טרמינל 3","התייצבות בשעה 02:00 (שעון ישראל). צ׳ק־אין בדלפקים. בדיקת התייצבות דרך אחראי מנהלות צוותי. טיסה מס׳ 271 Ent.","fly","C","war","","","IL"],
+["04:55","08:00","טיסה לוורשה","לפי הלו״ז, בשעון פולין. כדאי לישון בטיסה כדי להגיע ערניים.","fly","C","war"],
+["08:00","10:00","כניסה, דרכונים ואיסוף מזוודות","ביקורת דרכונים, איסוף מזוודות, שירותים ועליה לאוטובוסים. יציאה מרוכזת, התאספות צוות ליד האוטובוס (מזהים בעלייה). תדריך אבטחה קצר. קבלת מערכות שמע באוטובוס.","prep","C","war","שחרית"],
+["10:00","10:30","נסיעה לבית העלמין באוקופובה","","bus","C","war"],
+["10:30","12:30","הדרכה בבית העלמין","פתיחת המסע: החיים שהיו, הקהילה שנגדעה. השלמת קריאת התורה (למתפללים).","tour","C","war"],
+["12:30","13:30","נסיעה וארוחת צהריים במוזיאון פולין","שירותים בכניסה למוזיאון. הארוחה בדשא ליד המוזיאון.","meal","C","war","מנחה"],
+["13:30","13:45","נסיעה לזלוטה","","bus","C","war"],
+["13:45","14:30","סיור בגטו ורשה","נקודות הדרכה: שרידי חומה, שיינה, בית החולים.","tour","C","war"],
+["14:30","15:00","עלייה לאוטובוסים ונסיעה למוזיאון פולין","","bus","C","war"],
+["15:00","15:30","עצירת התרעננות · מוזיאון פולין","שירותים.","prep","C","war"],
+["15:30","17:00","מסלול הגבורה: ממילא 18 לאנדרטת רפפורט","סיפור המרד. הדרכה בצוותים, הליכה בין הנקודות כולל הדרכה.","tour","C","war"],
+["17:00","17:30","מעמד משלחתי · מילא 18","אחריות צוות 1.","cer","C","war"],
+["17:30","18:00","עליה לאוטובוסים","שירותים במוזיאון.","prep","C","war"],
+["18:00","20:30","נסיעה למלון Arche, נלנצ׳וב","","bus","C","war"],
+["20:30","21:15","ארוחת ערב וחלוקת חדרים","","meal","C","war","ערבית"],
+["21:30","22:30","שיחות סיכום יום צוותיות","בכיתות במלון.","prep","C","war"],
+["22:30","","כניסה לחדרים","","rest","C","war"]
+]},
+{id:2,date:12,title:"יוזפוב ובלז׳ץ",sites:"יוזפוב (יער בורות הירי) · בלז׳ץ",
+ sun:{rise:"5:04",set:"17:44",dark:"18:17"},hotel:"Arche Hotel, נלנצ׳וב",dressTxt:"באתרים על מדים. יציאה מהמלון על חצי א׳",place:"bel",
+ items:[
+["06:00","06:30","השכמה","","prep","H","bel","שחרית"],
+["06:30","07:15","ארוחת בוקר","","meal","H","bel"],
+["07:15","07:30","עלייה לאוטובוסים","","prep","H","bel"],
+["07:30","10:00","נסיעה ליוזפוב · היער של בורות הירי","","bus","H","bel"],
+["10:00","10:30","התארגנות לצעידה","שירותים כימיים.","prep","M","bel","","להחליף למדים לפני הצעידה (בנסיעה או בהתארגנות)."],
+["10:30","10:45","כניסה בצעידה משלחתית","","cer","M","bel"],
+["10:45","11:30","הדרכה ביוזפוב","הדרכה בצוותים.","tour","M","bel"],
+["11:30","12:00","מעמד משלחתי","אחריות צוות 4.","cer","M","bel"],
+["12:00","12:45","יציאה וארוחת צהריים","שירותים כימיים.","meal","M","bel"],
+["12:45","13:45","נסיעה לבלז׳ץ","","bus","M","bel"],
+["13:45","14:15","התארגנות · מוזיאון בלז׳ץ","שירותים במוזיאון.","prep","M","bel","מנחה"],
+["14:15","16:00","הדרכה בצוותים","כניסה למוזיאון.","tour","M","bel"],
+["16:00","16:30","טקס משלחתי","אחריות צוות 2.","cer","M","bel"],
+["16:30","17:00","התארגנות ויציאה","שירותים.","prep","M","bel"],
+["17:00","20:00","נסיעה חזרה למלון Arche, נלנצ׳וב","","bus","H","bel","","מחוץ לאתרים חוזרים לחצי א׳ (לפי כלל היום)."],
+["20:00","20:45","ארוחת ערב","","meal","H","bel","ערבית"],
+["21:00","22:30","שיחות צוות בכיתות במלון","","prep","H","bel"],
+["22:30","","כניסה לחדרים","","rest","H","bel"]
+]},
+{id:3,date:13,title:"מיידנק, קרשניק וקרקוב",sites:"מיידנק · קרשניק · מעבר ללינה בקרקוב",
+ sun:{rise:"6:50",set:"17:41",dark:"18:15"},hotel:"בסט ווסטרן פרמייר, קרקוב (מעבר מלון, המזוודות עולות לאוטובוס)",dressTxt:"מיידנק על מדים. כל השאר על חצי א׳",place:"lub",
+ items:[
+["06:30","07:00","השכמה","","prep","H","lub","שחרית"],
+["07:00","07:45","ארוחת בוקר","","meal","H","lub"],
+["07:45","08:00","עלייה לאוטובוסים והעלאת מזוודות","מזהים על האוטובוסים (זיהוי משתתפים ומטען).","prep","H","lub"],
+["08:00","09:00","נסיעה למיידנק","","bus","H","lub"],
+["09:00","09:30","התארגנות להדרכה","שירותים בכניסה.","prep","M","lub","","להחליף למדים לפני הכניסה (בנסיעה או בהתארגנות)."],
+["09:30","13:00","הדרכה במיידנק","עולם המחנות, דמותם של רוצחים. כ־3.5 שעות על הרגליים, לבוא עם שכבה חמה.","tour","M","lub"],
+["13:00","13:30","טקס משלחתי","אחריות צוות.","cer","M","lub"],
+["13:30","14:00","עלייה לאוטובוסים","","prep","H","lub","מנחה","להחליף לחצי א׳ באוטובוס: בקרשניק יורדים ללא מדים."],
+["14:00","15:30","נסיעה לקרשניק","ארוחת צהריים בדרך (באוטובוס). במקור הופיע 14:00 עד 30:15, תוקן ל־15:30.","bus","H","lub"],
+["15:30","16:45","הליכה לבית הכנסת והדרכה משלחתית","ירידה מהאוטובוסים ללא מדים.","tour","H","lub"],
+["16:45","21:00","נסיעה למלון בסט ווסטרן פרמייר, קרקוב","במקור 16:45 עד 21:00 (4 שעות ורבע). נראה חריג, כדאי לאשר מול המארגנים.","bus","H","kra"],
+["21:00","21:30","ארוחת ערב","","meal","H","kra","ערבית"],
+["21:30","22:45","שיחות צוותיות","","prep","H","kra"],
+["22:45","","עלייה לחדרים","","rest","H","kra"]
+]},
+{id:4,date:14,title:"קרקוב: בית עלמין, קז׳ימיש וגטו",sites:"בית העלמין ברקוביצקי · קז׳ימיש · פודגוזה · העיר העתיקה",
+ sun:{rise:"7:00",set:"17:51",dark:"18:24"},hotel:"בסט ווסטרן פרמייר, קרקוב",dressTxt:"אזרחי כל היום (בערב עולים על מדים)",place:"kra",
+ items:[
+["06:30","07:00","השכמה","לבוש אזרחי.","prep","C","kra","שחרית"],
+["07:00","07:45","ארוחת בוקר","","meal","C","kra"],
+["07:45","08:00","עלייה לאוטובוסים","","prep","C","kra"],
+["08:00","08:45","נסיעה לבית העלמין ברקוביצקי","","bus","C","kra"],
+["08:45","09:45","הדרכה בבית העלמין","","tour","C","kra"],
+["09:45","10:00","יציאה לאוטובוסים","","prep","C","kra"],
+["10:00","10:30","נסיעה לקז׳ימיש","","bus","C","kra"],
+["10:30","12:15","הדרכה: תור הזהב של יהדות פולין","נקודות הדרכה: בית הכנסת אלטשול, רמ״א, טמפל וכיכר הברווזים.","tour","C","kra"],
+["12:15","13:00","ארוחת צהריים · מלון קז׳ימיש","","meal","C","kra","מנחה"],
+["13:00","13:30","נסיעה לפודגוזה","ירידה בכיכר.","bus","C","kra"],
+["13:30","15:15","הדרכה בגטו קרקוב","הדרכה בצוותים: כיכר, חומה קרובה, חומה רחוקה, גבעה ירוקה, יוזפינסקה, שינדלר. הסיום בכיכר ועליה מרוכזת לאוטובוסים. במקור 13:15.","tour","C","kra"],
+["15:15","15:45","נסיעה לזמן חופשי בעיר העתיקה","תדרוך אבטחה.","bus","C","kra"],
+["15:45","18:15","זמן חופשי משלחתי · עיר עתיקה","","free","C","kra"],
+["18:15","18:45","הליכה לאוטובוסים מנקודת האיסוף","","prep","C","kra"],
+["18:45","19:15","נסיעה למלון","","bus","C","kra"],
+["19:15","20:00","התארגנות וארוחת ערב קלה","עלייה על מדים.","meal","M","kra","ערבית","לעלות על מדים לפני ערב המפקד."],
+["20:00","21:30","ערב מפקד · ערב משפחות שכולות","אחריות צוות 4 ויחידת ׳עדים במדים׳.","cer","M","kra"]
+]},
+{id:5,date:15,title:"אושוויץ־בירקנאו וחזרה",sites:"אושוויץ 1 · בירקנאו · שדה התעופה בקטוביץ",
+ sun:{rise:"7:02",set:"17:49",dark:"18:22"},hotel:"אין לינה: טיסה בלילה, המזוודות עולות לאוטובוס בבוקר",dressTxt:"יציאה מהמלון על חצי א׳, מדים עד היציאה מבירקנאו, אחר כך אזרחי",place:"osw",
+ items:[
+["05:30","06:00","השכמה","","prep","H","kra","שחרית"],
+["06:00","06:30","ארוחת בוקר והתארגנות ליציאה","","meal","H","kra"],
+["06:30","06:45","עלייה לאוטובוסים","העמסת מזוודות.","prep","H","kra"],
+["06:45","08:15","נסיעה לאושוויץ 1","","bus","H","kra"],
+["08:15","08:30","התארגנות וכניסה לאושוויץ","חלוקת כרטיסי כניסה. כניסה ללא תיקים.","prep","M","osw","","להחליף למדים בנסיעה (שעה וחצי) לפני ההגעה."],
+["08:30","11:45","הדרכה באושוויץ 1","3 שעות ורבע, בעיקר בתוך מבנים ובין מבנים.","tour","M","osw"],
+["11:45","12:15","יציאה וארוחת צהריים","ארוחת צהריים בחנייה. שירותים בכניסה.","meal","M","osw"],
+["12:15","12:45","נסיעה לבירקנאו והתארגנות לצעידה","","bus","M","osw"],
+["12:45","13:00","צעידה משלחתית","הכנסת המשלחת לצעידה.","cer","M","osw"],
+["13:00","15:30","הדרכה בבירקנאו בצוותים","סומן במקור כחשוב. 2.5 שעות בחוץ, בגדים חמים.","tour","M","osw"],
+["15:30","16:00","טקס מסכם","אחריות צוות 1. זרים נוספים: יד ושם, FIDF.","cer","M","osw"],
+["16:00","16:45","יציאה ועלייה לאוטובוסים","שירותים בכניסה.","prep","M","osw","מנחה"],
+["16:45","17:00","נסיעה ל־ART DECO","","bus","M","osw"],
+["17:00","17:30","ארוחת ערב","עלייה על אזרחי.","meal","C","osw","","להחליף לאזרחי: המדים נשארים עד היציאה מבירקנאו."],
+["17:30","19:00","שיחות סיכום צוותיות","","prep","C","osw"],
+["19:00","19:30","שיחת סיכום משלחתית","באולם.","prep","C","osw"],
+["19:30","19:45","עלייה לאוטובוסים","","prep","C","osw"],
+["19:45","21:00","נסיעה לשדה התעופה בקטוביץ","","bus","C","osw"],
+["21:00","23:30","צ׳ק־אין וטיסה לארץ","טיסה מס׳ 250 Ent.","fly","C","osw","ערבית"]
+]}
+];
+
+/* ---------- WEATHER ----------
+hi/lo °C. rain: 0 dry, 1 light/showers possible, 2 rain. est = regional estimate, not a published forecast. */
+var WX = {
+1:{war:{name:"ורשה",hi:15,lo:10,tx:"ממטרים מפוזרים",rain:1,mm:0.8,wind:13,src:"w1"}},
+2:{bel:{name:"יוזפוב ובלז׳ץ",hi:14,lo:6,tx:"מעונן, ממטרים אפשריים",rain:1,wind:14,est:1}},
+3:{lub:{name:"לובלין ומיידנק",hi:13,lo:5,tx:"מעונן, גשם קל אפשרי",rain:1,wind:10,est:1},
+   kra:{name:"קרקוב",hi:13,lo:4,tx:"מעונן, גשם קל",rain:1,src:"w24"}},
+4:{kra:{name:"קרקוב",hi:15,lo:4,tx:"בהיר",rain:0,src:"w24"}},
+5:{osw:{name:"אושוויץ ובירקנאו",hi:17,lo:4,tx:"בהיר ויבש",rain:0,est:1,src:"w24"}}
+};
+var SRC = [
+ ["Open-Meteo, תחזית מתעדכנת","https://open-meteo.com/"],
+ ["תחזית ורשה, 14 ימים (weer1)","https://www.weer1.com/amp/europe/poland/mazowieckie/warsaw?page=14"],
+ ["תחזית קרקוב, 14 ימים (wetter24)","https://www.wetter24.de/vorhersage/14tage/polen/krakau/18147782/"]
+];
+var LIVE = {
+ war:["ורשה","https://www.windy.com/52.230/21.012?52.230,21.012,9"],
+ bel:["יוזפוב ובלז׳ץ","https://www.windy.com/50.4/23.2?50.4,23.2,9"],
+ lub:["לובלין","https://www.windy.com/51.247/22.568?51.247,22.568,9"],
+ kra:["קרקוב","https://www.windy.com/50.061/19.937?50.061,19.937,9"],
+ osw:["אושוויץ","https://www.windy.com/50.034/19.210?50.034,19.210,9"]
+};
+
+/* ---------- PACKING ---------- */
+var PACK = [
+{t:"מסמכים וכסף",i:[["p1","דרכון בתוקף"],["p2","פרטי טיסות (271 Ent הלוך, 250 Ent חזור) ואישורי המשלחת"],["p3","מעט מזומן בזלוטי לשירותים וקפה"],["p4","כרטיס אשראי וכסף לחירום"]]},
+{t:"לבוש (לפי הקוד של כל יום)",i:[["c1","מדים מלאים נקיים וגהוצים: 12.10, 13.10 (מיידנק), 14.10 (ערב), 15.10"],["c2","בגדי חצי א׳ ל־5 הימים, כולל החלפה"],["c3","בגדים אזרחיים: טיסה ויום ראשון, יום רביעי, ערב אחרון לפני הטיסה"],["c4","שכבה תרמית מתחת למדים (בקרים 4 עד 6 מעלות)"],["c5","גרביים חמים וחילוף גרביים"],["c6","כובע וכפפות לבוקר ולעמידה ארוכה בחוץ"],["c7","מעיל גשם או פונצ׳ו שנכנס מעל המדים"],["c8","נעליים סגורות, נוחות ועמידות למים"],["c9","שקית לבגדים רטובים"]]},
+{t:"ציוד ליום",i:[["g1","תפילין, טלית וסידור"],["g2","מטען נייד, כבלים ומתאם חשמל אירופי"],["g3","בקבוק מים וחטיפים לנסיעות הארוכות"],["g4","כרית צוואר ואטמי אוזניים לשינה באוטובוס"],["g5","תיק קטן: באושוויץ נכנסים ללא תיקים, לאשר מידות מול המארגנים"],["g6","תרופות אישיות ומגבונים"],["g7","תיק קטן עם הפריטים הדחופים לכל היום (המזוודה נשארת באוטובוס)"]]}
+];
+/* ---------- CORE ---------- */
+var $ = function(s, r){ return (r || document).querySelector(s); };
+var state = {view:"day", day:1, tz:"pl", sim:null, chk:{}, theme:""};
+
+function save(){
+  try{ localStorage.setItem("ed26", JSON.stringify({view:state.view, day:state.day, tz:state.tz, chk:state.chk, theme:state.theme})); }catch(e){}
+}
+function load(){
+  try{
+    var s = JSON.parse(localStorage.getItem("ed26") || "{}");
+    if(s.view) state.view = s.view;
+    if(s.day) state.day = s.day;
+    if(s.tz) state.tz = s.tz;
+    if(s.chk) state.chk = s.chk;
+    if(s.theme) state.theme = s.theme;
+  }catch(e){}
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function hm(s){ var p = s.split(":"); return (+p[0]) * 60 + (+p[1]); }
+
+/* normalise items to minutes in Poland time */
+DAYS.forEach(function(d){
+  d.items = d.items.map(function(a){
+    var off = a[9] === "IL" ? -60 : 0;
+    var sm = hm(a[0]) + off;
+    var em = a[1] ? hm(a[1]) + off : sm;
+    return {s:a[0], e:a[1], t:a[2], n:a[3] || "", k:a[4], d:a[5], l:a[6], p:a[7] || "", c:a[8] || "", sm:sm, em:em, dur:em - sm};
+  });
+});
+function dayById(id){ return DAYS[id - 1]; }
+
+/* ---------- time ---------- */
+function devShift(day){
+  var off = -new Date(Date.UTC(2026, 9, day.date, 12)).getTimezoneOffset();
+  return off - 120;
+}
+function shiftFor(day){
+  if(state.tz === "il") return 60;
+  if(state.tz === "dev") return devShift(day);
+  return 0;
+}
+function fmt(m, day){
+  var x = (((m + shiftFor(day)) % 1440) + 1440) % 1440;
+  return pad(Math.floor(x / 60)) + ":" + pad(x % 60);
+}
+function tzLabel(){
+  if(state.tz === "il") return "שעון ישראל";
+  if(state.tz === "dev") return "שעון המכשיר";
+  return "שעון פולין";
+}
+function msAt(day, plMin){ return Date.UTC(2026, 9, day.date, 0, 0) + (plMin - 120) * 60000; }
+function nowMs(){ return state.sim !== null ? state.sim : Date.now(); }
+function fmtDur(m){
+  var h = Math.floor(m / 60), r = m % 60;
+  if(!h) return r + " ד׳";
+  return h + " ש׳" + (r ? " " + r + " ד׳" : "");
+}
+function itemEnd(it){ return it.em > it.sm ? it.em : it.sm + 30; }
+
+/* where is "now" in the schedule */
+function where(){
+  var t = nowMs(), next = null;
+  for(var di = 0; di < DAYS.length; di++){
+    var d = DAYS[di];
+    for(var ii = 0; ii < d.items.length; ii++){
+      var it = d.items[ii], st = msAt(d, it.sm), en = msAt(d, itemEnd(it));
+      if(t >= st && t < en) return {status:"in", di:di, ii:ii};
+      if(st > t && !next) next = {di:di, ii:ii};
+    }
+  }
+  if(!next) return {status:"after"};
+  var first = DAYS[0].items[0];
+  if(t < msAt(DAYS[0], first.sm)) return {status:"before", di:0, ii:0};
+  return {status:"gap", di:next.di, ii:next.ii};
+}
+function liveDayIndex(){
+  var w = where();
+  if(w.status === "in" || w.status === "gap") return w.di;
+  return -1;
+}
+
+/* ---------- weather ---------- */
+function wxAt(day, loc){
+  var w = WX[day.id];
+  return w[loc] || w[Object.keys(w)[0]];
+}
+function tempAt(w, plMin){
+  if(w.h){ var hh = Math.min(23, Math.max(0, Math.floor(plMin / 60))); if(w.h[hh]) return Math.round(w.h[hh].t); }
+  var h = plMin / 60; if(h < 6) h += 24;
+  var v = h <= 15 ? w.lo + (w.hi - w.lo) * (1 - Math.cos(Math.PI * (h - 6) / 9)) / 2
+                  : w.lo + (w.hi - w.lo) * (1 + Math.cos(Math.PI * (h - 15) / 15)) / 2;
+  return Math.round(v);
+}
+function dayRange(day){
+  var lo = 99, hi = -99, rain = 0, wind = 0;
+  var w = WX[day.id];
+  Object.keys(w).forEach(function(k){
+    lo = Math.min(lo, w[k].lo); hi = Math.max(hi, w[k].hi);
+    rain = Math.max(rain, w[k].rain); wind = Math.max(wind, w[k].wind || 0);
+  });
+  return {lo:lo, hi:hi, rain:rain, wind:wind};
+}
+
+/* ---------- dress, drives, sleep ---------- */
+function dressSeq(day){
+  var seq = [];
+  day.items.forEach(function(it){
+    if(!seq.length || seq[seq.length - 1].d !== it.d) seq.push({d:it.d, from:it.sm});
+  });
+  return seq;
+}
+function changeAt(day, ii){
+  if(ii === 0) return null;
+  var it = day.items[ii], prev = day.items[ii - 1];
+  if(it.d === prev.d) return null;
+  return it.c || ("להחליף ל" + DRESS[it.d]);
+}
+function driveClass(it){
+  if(it.k !== "bus") return "";
+  if(it.dur >= 120) return "long";
+  if(it.dur >= 75) return "mid";
+  return "short";
+}
+function sleepNote(day, ii){
+  var it = day.items[ii], nx = day.items[ii + 1], cl = driveClass(it);
+  if(cl !== "long" && cl !== "mid") return "";
+  var after = "";
+  if(nx){
+    if(nx.k === "tour" || nx.k === "cer") after = " אחריה: " + nx.t + ", כדאי להגיע ערניים.";
+    else if(nx.k === "fly") after = " אחריה: " + nx.t + ", אפשר לנוח עכשיו.";
+    else after = " אחריה: " + nx.t + ".";
+  }
+  if(cl === "long") return "נסיעה של " + fmtDur(it.dur) + ": שווה לישון." + after;
+  return "נסיעה של " + fmtDur(it.dur) + ": אפשר לנמנם." + after;
+}
+function dayDrive(day){
+  var tot = 0, longs = 0, mids = 0;
+  day.items.forEach(function(it){
+    if(it.k === "bus"){ tot += it.dur; if(it.dur >= 120) longs++; else if(it.dur >= 75) mids++; }
+  });
+  return {tot:tot, longs:longs, mids:mids};
+}
+
+/* ---------- outfit advice ---------- */
+function outfit(day){
+  var r = dayRange(day), L = [], stand = 0;
+  day.items.forEach(function(it){ if(it.k === "tour" || it.k === "cer") stand += it.dur; });
+  if(r.lo <= 6) L.push("בוקר קר (" + r.lo + "°): שכבה תרמית, גרביים חמים וכובע.");
+  else if(r.lo <= 10) L.push("בוקר קריר (" + r.lo + "°): שכבה ארוכה או פליס.");
+  if(r.hi <= 14) L.push("ביום עד " + r.hi + "°: מעיל חם, בעיקר לעמידה ארוכה.");
+  else L.push("ביום עד " + r.hi + "°: שכבות שאפשר להסיר, כי באוטובוס חם.");
+  if(r.rain >= 1) L.push("גשם אפשרי: פונצ׳ו או מעיל גשם שנכנס מעל הבגדים, ונעליים עמידות למים.");
+  else L.push("צפוי יבש: הפונצ׳ו יכול להישאר בתיק הגדול.");
+  if(r.wind >= 13) L.push("רוח של עד " + r.wind + " קמ״ש: כובע שנשאר על הראש.");
+  if(stand >= 180) L.push("כ־" + fmtDur(stand) + " של הדרכה וטקסים על הרגליים: נעליים נוחות ותוספת שכבה אחת.");
+  var seq = dressSeq(day);
+  if(seq.indexOf && seq.length > 1) L.push("סדר הלבוש היום: " + seq.map(function(s){ return DRESS[s.d]; }).join(" ← ") + ".");
+  return L;
+}
+
+/* ---------- tips for a day ---------- */
+function tipsFor(day, di){
+  var T = [], pr = {};
+  day.items.forEach(function(it){ if(it.p){ (pr[it.p] = pr[it.p] || []).push(it); } });
+  var ps = Object.keys(pr).map(function(k){ return k + " " + fmt(pr[k][0].sm, day); });
+  if(ps.length) T.push("תפילות לפי הלו״ז: " + ps.join(" · ") + ". שקיעה " + day.sun.set + ", חשיכה " + day.sun.dark + " (שעון פולין).");
+  var wc = day.items.filter(function(it){ return /שירותים/.test(it.n); });
+  if(wc.length) T.push("עצירות עם שירותים מסומנים: " + wc.map(function(it){ return fmt(it.sm, day); }).join(", ") + ". כדאי לנצל כל אחת.");
+  var fr = day.items.filter(function(it){ return it.k === "free"; })[0];
+  if(fr) T.push("זמן חופשי " + fmt(fr.sm, day) + "–" + fmt(fr.em, day) + ": להכין מראש מה לאכול ולקנות, ולחזור לנקודת האיסוף בזמן.");
+  var meals = day.items.filter(function(it){ return it.k === "meal"; });
+  if(meals.length) T.push("ארוחות: " + meals.map(function(it){ return fmt(it.sm, day) + " " + it.t; }).join(" · ") + ".");
+  var nxt = DAYS[di + 1];
+  var last = day.items[day.items.length - 1];
+  if(day.id === 1) T.push("אין לילה רגיל לפני הטיסה: לישון בטיסה ובנסיעה הארוכה בערב (שעתיים וחצי).");
+  else if(nxt){
+    var gap = (nxt.items[0].sm + 1440) - itemEnd(last);
+    T.push("הלילה: מסיימים ב־" + fmt(itemEnd(last), day) + ", מחר השכמה ב־" + fmt(nxt.items[0].sm, day) + ". לכל היותר " + fmtDur(gap) + " של שינה, כדאי להיכנס למיטה מוקדם.");
+  } else T.push("הטיסה בלילה: לארוז הכול לפני היציאה מהמלון ולישון בטיסה.");
+  T.push("מטען נייד ביד ולא במזוודה, וטעינה באוטובוס בכל נסיעה ארוכה.");
+  return T;
+}
+
+/* ---------- live weather (weather.json written by the scheduled job) ---------- */
+var LIVEWX = null;
+var CODES = {0:"בהיר",1:"בהיר ברובו",2:"מעונן חלקית",3:"מעונן",45:"ערפל",48:"ערפל",51:"טפטוף קל",53:"טפטוף",55:"טפטוף חזק",56:"טפטוף קפוא",57:"טפטוף קפוא",61:"גשם קל",63:"גשם",65:"גשם חזק",66:"גשם קפוא",67:"גשם קפוא",71:"שלג קל",73:"שלג",75:"שלג כבד",77:"גרגירי שלג",80:"ממטרים קלים",81:"ממטרים",82:"ממטרים חזקים",85:"ממטרי שלג",86:"ממטרי שלג",95:"סופת רעמים",96:"סופת רעמים וברד",99:"סופת רעמים וברד"};
+function codeTxt(c){ return CODES[c] || "לא ידוע"; }
+function rainLevel(pp, mm){ return (mm >= 2 || pp >= 70) ? 2 : ((mm >= 0.2 || pp >= 30) ? 1 : 0); }
+function applyLive(j){
+  if(!j || !j.loc) return false;
+  var n = 0;
+  DAYS.forEach(function(d){
+    var ds = "2026-10-" + pad(d.date), w = WX[d.id];
+    Object.keys(w).forEach(function(k){
+      var L = j.loc[k], D = L && L.daily && L.daily[ds];
+      if(!D || D.hi == null || D.lo == null) return;
+      var x = w[k];
+      x.hi = Math.round(D.hi); x.lo = Math.round(D.lo);
+      x.wind = Math.round(D.wind || 0); x.mm = D.mm || 0;
+      x.rain = rainLevel(D.pp || 0, D.mm || 0);
+      x.tx = codeTxt(D.code) + (D.pp != null ? " · סיכוי לגשם " + D.pp + "%" : "");
+      x.est = 0; x.live = 1;
+      if(L.hourly && L.hourly[ds] && L.hourly[ds].length === 24) x.h = L.hourly[ds];
+      n++;
+    });
+  });
+  if(n) LIVEWX = j;
+  return n > 0;
+}
+function hourWx(w, h){
+  var x = w.h && w.h[h];
+  if(x) return {t:Math.round(x.t), txt:codeTxt(x.code) + (x.mm >= 0.1 ? " · " + x.mm + " מ״מ" : ""), rain:rainLevel(x.pp || 0, x.mm || 0)};
+  return {t:tempAt(w, h * 60 + 30), txt:rainTxt(w), rain:w.rain};
+}
+function wxSentence(){
+  if(LIVEWX){
+    var u = "";
+    try{ u = new Date(LIVEWX.updated).toLocaleString("he-IL", {day:"numeric", month:"numeric", hour:"2-digit", minute:"2-digit"}); }catch(e){}
+    return "התחזיות מתעדכנות אוטומטית מ־Open-Meteo, לפי הקואורדינטות של כל אתר. עדכון אחרון: " + u + ". כדאי לבדוק שוב יומיים לפני היציאה.";
+  }
+  return "התחזיות בדף נאספו ב־8.10 ולא התעדכנו מאז. ורשה וקרקוב מתחזית מפורסמת ל־14 יום, שאר האתרים אומדן לפי הערים הקרובות. הטמפרטורה השעתית מקורבת. כדאי לבדוק שוב יומיים לפני היציאה.";
+}
+/* ---------- VIEWS ---------- */
+var DS = ["א׳","ב׳","ג׳","ד׳","ה׳"];
+function pill(c, t){ return '<span class="pill ' + c + '">' + t + '</span>'; }
+function dpill(d){ return '<span class="pill d-' + d + '"><i class="sw sw-' + d + '"></i>' + DRESS[d] + '</span>'; }
+function rainTxt(w){ return w.rain >= 2 ? "גשם" : (w.rain === 1 ? "גשם קל אפשרי" : "יבש"); }
+
+function rowHtml(day, ii){
+  var it = day.items[ii], ch = changeAt(day, ii), t = nowMs();
+  var st = msAt(day, it.sm), en = msAt(day, itemEnd(it));
+  var cls = "row d-" + it.d + "r" + (t >= st && t < en ? " live" : "") + (t >= en ? " past" : "");
+  var tags = pill("n", KIND[it.k]) + dpill(it.d);
+  if(it.p) tags += pill("acc", "תפילת " + it.p);
+  if(/שירותים/.test(it.n)) tags += pill("good", "שירותים");
+  if(it.k === "bus"){
+    var dc = driveClass(it);
+    tags += pill(dc === "long" ? "warn" : (dc === "mid" ? "acc" : "n"), fmtDur(it.dur) + (dc === "long" ? " · שווה לישון" : (dc === "mid" ? " · אפשר לנמנם" : "")));
+  }
+  if(it.k === "tour" || it.k === "cer" || it.k === "free"){
+    var w = wxAt(day, it.l);
+    tags += pill("n", tempAt(w, (it.sm + itemEnd(it)) / 2) + "°" + (w.rain >= 1 ? " · גשם אפשרי" : ""));
+  }
+  var sn = sleepNote(day, ii);
+  var html = "";
+  if(ch) html += '<div class="chg">החלפת בגדים ל' + DRESS[it.d] + ": " + esc(ch) + "</div>";
+  html += '<div class="' + cls + '"><div class="time num">' + fmt(it.sm, day) +
+    "<small>" + (it.em > it.sm ? "עד " + fmt(it.em, day) : "") + "</small></div>" +
+    '<div class="body"><div class="ttl">' + esc(it.t) + "</div>" +
+    (it.n ? '<div class="note">' + esc(it.n) + "</div>" : "") +
+    '<div class="tags">' + tags + "</div>" +
+    (sn ? '<div class="drive note">' + esc(sn) + "</div>" : "") + "</div></div>";
+  return html;
+}
+function timeline(day){
+  var h = "";
+  for(var i = 0; i < day.items.length; i++) h += rowHtml(day, i);
+  return '<div class="tl">' + h + "</div>";
+}
+
+function wxBoxes(day){
+  var w = WX[day.id];
+  return '<div class="wxrow">' + Object.keys(w).map(function(k){
+    var x = w[k];
+    return '<div class="wxbox"><div class="muted">' + esc(x.name) + '</div><b class="num">' + x.hi + "° / " + x.lo + "°</b>" +
+      "<div>" + esc(x.tx) + (x.wind ? " · רוח " + x.wind + " קמ״ש" : "") + "</div>" +
+      '<div class="est">' + (x.live ? "מתעדכן אוטומטית" : (x.est ? "אומדן אזורי, לא תחזית מפורסמת" : "תחזית מפורסמת")) + ' · <a href="' + LIVE[k][1] + '" target="_blank" rel="noopener">תחזית חיה</a></div></div>';
+  }).join("") + "</div>";
+}
+
+function changesList(day){
+  var out = [];
+  day.items.forEach(function(it, i){
+    var c = changeAt(day, i);
+    if(c) out.push('<li><b class="num">' + fmt(it.sm, day) + "</b> " + dpill(it.d) + " " + esc(c) + "</li>");
+  });
+  return out.length ? '<ul style="margin:0;padding-inline-start:20px">' + out.join("") + "</ul>" : '<div class="muted">אין החלפות: קוד אחד כל היום.</div>';
+}
+function drivesList(day){
+  var out = [], dd = dayDrive(day);
+  day.items.forEach(function(it, i){
+    var sn = sleepNote(day, i);
+    if(sn) out.push('<li><b class="num">' + fmt(it.sm, day) + "–" + fmt(it.em, day) + "</b> " + esc(it.t) + "<div class=\"note\">" + esc(sn) + "</div></li>");
+  });
+  return (out.length ? '<ul style="margin:0 0 8px;padding-inline-start:20px">' + out.join("") + "</ul>" : '<div class="muted">אין נסיעות ארוכות היום.</div>') +
+    '<div class="muted">סך הנסיעות היום: ' + fmtDur(dd.tot) + "</div>";
+}
+
+function dayView(di, compact){
+  var day = DAYS[di], dd = dayDrive(day), r = dayRange(day), h = "";
+  h += '<section class="card"><div class="dayhead"><div><h2>יום ' + DOW[di] + " · " + day.date + ".10</h2>" +
+    '<div class="muted" style="margin-top:2px">' + esc(day.title) + "</div></div>" +
+    '<div class="facts">' + pill("n", "קוד לבוש: " + esc(day.dressTxt)) + "</div></div>" +
+    '<div class="facts">' +
+    pill("n", (day.sun.rise ? "זריחה " + day.sun.rise + " · " : "") + "שקיעה " + day.sun.set + " · חשיכה " + day.sun.dark) +
+    pill("n", "לינה: " + esc(day.hotel)) +
+    (dd.longs ? pill("warn", dd.longs + " נסיעות ארוכות") : "") + "</div>" +
+    '<div style="margin-top:12px">' + wxBoxes(day) + "</div></section>";
+  h += '<div class="' + (compact ? "" : "grid2") + '"><section class="card"><h2>מה ללבוש</h2><ul style="margin:0;padding-inline-start:20px">' +
+    outfit(day).map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></section>";
+  if(!compact){
+    h += '<section class="card"><h2>החלפות בגדים</h2>' + changesList(day) + '<h3 style="margin-top:14px">נסיעות ושינה</h3>' + drivesList(day) + "</section>";
+  }
+  h += "</div>";
+  h += '<section class="card"><h2>לו״ז היום · ' + tzLabel() + "</h2>" + timeline(day) + "</section>";
+  if(!compact){
+    h += '<section class="card"><h2>עוד דברים שכדאי לזכור</h2><ul style="margin:0;padding-inline-start:20px">' +
+      tipsFor(day, di).map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></section>";
+  }
+  return h;
+}
+
+function twoView(){
+  var a = Math.min(state.day - 1, 3);
+  return '<div class="two"><div>' + dayView(a, true).replace(/<section class="card">/g, '<section class="card" style="margin-bottom:16px">') +
+    "</div><div>" + dayView(a + 1, true).replace(/<section class="card">/g, '<section class="card" style="margin-bottom:16px">') + "</div></div>";
+}
+
+function hourView(di){
+  var day = DAYS[di], last = day.items[day.items.length - 1];
+  var first = Math.floor(day.items[0].sm / 60), end = Math.ceil(itemEnd(last) / 60);
+  var darkMin = hm(day.sun.dark), setMin = hm(day.sun.set), t = nowMs(), rows = "";
+  for(var h = first; h < end; h++){
+    var lo = h * 60, hi = lo + 60;
+    var its = [];
+    day.items.forEach(function(it, i){ if(it.sm < hi && itemEnd(it) > lo) its.push(i); });
+    var ref = its.length ? day.items[its[0]] : day.items[0];
+    var w = wxAt(day, ref.l), hw = hourWx(w, h);
+    var cls = "hr" + (lo >= darkMin || lo < 360 ? " dark" : "") + (t >= msAt(day, lo) && t < msAt(day, hi) ? " live" : "");
+    var sun = "";
+    if(setMin >= lo && setMin < hi) sun += '<div class="sun">שקיעה ' + day.sun.set + "</div>";
+    if(darkMin >= lo && darkMin < hi) sun += '<div class="sun">חשיכה ' + day.sun.dark + "</div>";
+    var body = its.map(function(i){
+      var it = day.items[i], ch = changeAt(day, i);
+      var a = Math.max(it.sm, lo), b = Math.min(itemEnd(it), hi);
+      return '<div class="hitem d-' + it.d + 'r"><b>' + esc(it.t) + '</b> <span class="muted num">' + fmt(a, day) + "–" + fmt(b, day) + "</span> " +
+        dpill(it.d) + (driveClass(it) === "long" ? " " + pill("warn", "שווה לישון") : "") +
+        (ch && it.sm >= lo && it.sm < hi ? " " + pill("warn", "החלפת בגדים") : "") + "</div>";
+    }).join("");
+    rows += '<div class="' + cls + '"><div class="h num">' + fmt(lo, day) + '</div><div class="t num">' + hw.t + "°<small>" + hw.txt + "</small></div><div>" + (body || '<span class="muted">אין פעילות</span>') + sun + "</div></div>";
+  }
+  return '<section class="card"><h2>שעה אחר שעה · יום ' + DOW[di] + " " + day.date + ".10</h2>" +
+    '<div class="muted" style="margin-bottom:8px">' + tzLabel() + ". הפס הצבעוני מציג את קוד הלבוש בכל שעה. " + (LIVEWX ? "הטמפרטורה והגשם לפי תחזית שעתית מעודכנת." : "הטמפרטורה מחושבת מהמקסימום והמינימום של היום באתר.") + "</div>" +
+    rows + "</section>";
+}
+/* ---------- TRIP, PACK, NOW ---------- */
+var FLAGS = [
+ "טיסת הלוך: הלו״ז כותב 04:55 עד 08:00 (שעון פולין) וגם התייצבות 02:00 בנתב״ג. כדאי לוודא מול הכרטיס אם 04:55 הוא שעון ישראל או פולין.",
+ "יום שלישי: נסיעה לקרשניק הופיעה כ־14:00 עד 30:15. הוזן 15:30, לפי תחילת ההליכה לבית הכנסת.",
+ "יום שלישי: הנסיעה לקרקוב 16:45 עד 21:00 היא 4 שעות ורבע. נראה ארוך מהצפוי, כדאי לאשר.",
+ "יום רביעי: הדרכה בגטו קרקוב מתחילה במקור ב־13:15, בזמן הנסיעה לפודגוזה. הוזן 13:30.",
+ "יום שני: זריחה 5:04 במקור, בעוד שבשאר הימים 6:50 עד 7:02. כנראה טעות הקלדה, לא משפיע על התכנון.",
+ "תפילת מנחה מסומנת בלו״ז בלי שעה קבועה. הוצבה בשורה שבה היא מופיעה.",
+ "ART DECO מופיע ללא כתובת, ו״שד״ת קטוביץ״ הובן כשדה התעופה בקטוביץ."
+];
+
+function tripView(){
+  var cards = DAYS.map(function(d, i){
+    var r = dayRange(d), dd = dayDrive(d), seq = dressSeq(d);
+    var sw = seq.map(function(s){ return dpill(s.d); }).join(" ");
+    return '<article class="card" tabindex="0" role="button" data-d="' + (i + 1) + '" aria-label="פתח יום ' + DOW[i] + '">' +
+      "<h2>יום " + DOW[i] + " · " + d.date + ".10</h2><div><b>" + esc(d.title) + '</b></div><div class="muted">' + esc(d.sites) + "</div>" +
+      '<div class="facts">' + sw + "</div>" +
+      '<div><span class="num"><b>' + r.hi + "°</b> / " + r.lo + "°</span> · " + (r.rain ? "גשם אפשרי" : "יבש") + "</div>" +
+      '<div><div class="range"><i style="inset-inline-start:' + (r.lo / 20 * 100) + "%;width:" + ((r.hi - r.lo) / 20 * 100) + '%"></i></div><div class="scale num"><span>0°</span><span>10°</span><span>20°</span></div></div>' +
+      '<div class="facts">' + pill("n", "נסיעות " + fmtDur(dd.tot)) + (dd.longs ? pill("warn", dd.longs + " ארוכות · שווה לישון") : "") + (dd.mids ? pill("acc", dd.mids + " בינוניות") : "") + "</div>" +
+      '<div class="muted">' + esc(d.hotel) + "</div></article>";
+  }).join("");
+  var drives = "";
+  DAYS.forEach(function(d, di){
+    d.items.forEach(function(it, ii){
+      var cl = driveClass(it);
+      if(cl === "long" || cl === "mid"){
+        drives += "<tr><td>" + DOW[di] + " " + d.date + ".10</td><td class=\"num\">" + fmt(it.sm, d) + "–" + fmt(it.em, d) + "</td><td>" + esc(it.t) + "</td><td>" + fmtDur(it.dur) + "</td><td>" + (cl === "long" ? pill("warn", "שווה לישון") : pill("acc", "אפשר לנמנם")) + "</td></tr>";
+      }
+    });
+  });
+  var tot = 0; DAYS.forEach(function(d){ tot += dayDrive(d).tot; });
+  return '<div class="trip">' + cards + "</div>" +
+    '<section class="card"><h2>נסיעות שכדאי לתכנן סביבן שינה</h2><div class="scroll"><table><thead><tr><th>יום</th><th>שעות</th><th>נסיעה</th><th>משך</th><th>המלצה</th></tr></thead><tbody>' + drives + "</tbody></table></div>" +
+    '<div class="muted" style="margin-top:8px">סך כל הנסיעות במסע: ' + fmtDur(tot) + ". עד שעה וחצי לא מסומן. הטיסות לא נספרות.</div></section>" +
+    '<section class="card"><h2>שעון ופער שעות</h2><div>פולין מאחור בשעה אחת מישראל לאורך כל המסע (שתי המדינות עוברות לשעון חורף ב־25.10). הלו״ז כתוב בשעון פולין, חוץ מההתייצבות בנתב״ג. אפשר להחליף תצוגה בכפתור השעון למעלה.</div></section>' +
+    '<section class="card"><h2>כדאי לוודא מול המארגנים</h2>' + FLAGS.map(function(f){ return '<div class="flag">' + esc(f) + "</div>"; }).join("") + "</section>";
+}
+
+function packView(){
+  var total = 0, done = 0;
+  var groups = PACK.map(function(g){
+    var items = g.i.map(function(x){
+      total++; var on = !!state.chk[x[0]]; if(on) done++;
+      return '<label for="' + x[0] + '"><input type="checkbox" id="' + x[0] + '" data-k="' + x[0] + '"' + (on ? " checked" : "") + "><span>" + esc(x[1]) + "</span></label>";
+    }).join("");
+    return '<section class="card"><h2>' + esc(g.t) + '</h2><div class="pk">' + items + "</div></section>";
+  }).join("");
+  var rows = DAYS.map(function(d, i){
+    var r = dayRange(d);
+    return "<tr><td><b>" + DOW[i] + " " + d.date + ".10</b></td><td>" + dressSeq(d).map(function(s){ return dpill(s.d); }).join(" ") + '</td><td class="num">' + r.hi + "° / " + r.lo + "°</td><td>" + esc(outfit(d).slice(0, 3).join(" ")) + "</td></tr>";
+  }).join("");
+  return '<section class="card"><h2>ציוד שארזתי</h2><div class="num"><b id="pkc">' + done + "</b> מתוך " + total + '</div><div class="prog" style="margin-top:8px"><i id="pkb" style="width:' + (total ? done / total * 100 : 0) + '%"></i></div>' +
+    '<div class="muted" style="margin-top:8px">הסימונים נשמרים בדפדפן הזה בלבד.</div></section>' + groups +
+    '<section class="card"><h2>מה ללבוש בכל יום</h2><div class="scroll"><table><thead><tr><th>יום</th><th>קוד לבוש</th><th>טמפרטורה</th><th>המלצה</th></tr></thead><tbody>' + rows + "</tbody></table></div></section>";
+}
+
+function nowCard(){
+  var w = where(), t = nowMs(), h = '<section class="card now" id="nowcard">';
+  var first = DAYS[0].items[0];
+  if(w.status === "before"){
+    var diff = msAt(DAYS[0], first.sm) - t, d = Math.floor(diff / 864e5), hh = Math.floor(diff % 864e5 / 36e5), mm = Math.floor(diff % 36e5 / 6e4);
+    h += '<div class="muted">עד ההתייצבות בנתב״ג, טרמינל 3 (11.10, 02:00 שעון ישראל)</div><div class="cd num"><div><b>' + d + "</b><span>ימים</span></div><div><b>" + hh + "</b><span>שעות</span></div><div><b>" + mm + "</b><span>דקות</span></div></div>";
+  } else if(w.status === "after"){
+    h += '<div class="big">המסע הסתיים</div><div class="muted">הלו״ז נשאר כאן לעיון.</div>';
+  } else {
+    var d2 = DAYS[w.di], it = d2.items[w.ii], nx = d2.items[w.ii + 1], wx = wxAt(d2, it.l);
+    if(w.status === "in"){
+      var left = Math.round((msAt(d2, itemEnd(it)) - t) / 60000);
+      h += '<div class="muted">עכשיו · ' + DOW[w.di] + " " + d2.date + ".10</div><div class=\"big\">" + esc(it.t) + '</div><div class="facts">' + dpill(it.d) + pill("n", "עוד " + fmtDur(Math.max(left, 1))) + pill("n", tempAt(wx, (t - msAt(d2, 0)) / 60000 + 0) + "°") + "</div>";
+    } else {
+      h += '<div class="muted">בין פעילויות</div>';
+    }
+    var nxt = w.status === "gap" ? d2.items[w.ii] : nx;
+    if(nxt) h += '<div style="margin-top:8px">הבא: <b>' + esc(nxt.t) + '</b> ב־<span class="num">' + fmt(nxt.sm, d2) + "</span> · " + dpill(nxt.d) + (nxt.d !== it.d && w.status === "in" ? " " + pill("warn", "החלפת בגדים בקרוב") : "") + "</div>";
+  }
+  h += '<div class="sim" style="margin-top:12px"><label for="simIn">לבדוק איך זה נראה בזמן אחר (שעון פולין)</label><input type="datetime-local" id="simIn" min="2026-10-10T20:00" max="2026-10-15T23:59"><button class="btn" id="simClr" type="button">חזרה לשעה האמיתית</button>' + (state.sim !== null ? pill("warn", "מצב ניסוי") : "") + "</div></section>";
+  return h;
+}
+/* ---------- INIT ---------- */
+function renderBar(){
+  var seen = {};
+  document.querySelectorAll("#views button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === state.view)); });
+  var showDays = state.view !== "trip" && state.view !== "pack";
+  var box = $("#days"); box.hidden = !showDays;
+  var live = liveDayIndex();
+  box.innerHTML = DAYS.map(function(d, i){
+    var on = state.view === "two" ? (i === Math.min(state.day - 1, 3) || i === Math.min(state.day - 1, 3) + 1) : (i === state.day - 1);
+    var dots = dressSeq(d).map(function(s){ return '<i class="sw sw-' + s.d + '"></i>'; }).join("");
+    return '<button type="button" class="dchip num" data-d="' + (i + 1) + '" aria-pressed="' + on + '"><b>יום ' + DS[i] + (i === live ? " · עכשיו" : "") + "</b><span>" + d.date + ".10 " + dots + "</span></button>";
+  }).join("");
+  $("#tzBtn").textContent = "שעון: " + tzLabel().replace("שעון ", "");
+}
+function renderNow(){
+  var box = $("#nowbox");
+  if(document.activeElement && document.activeElement.id === "simIn") return;
+  box.innerHTML = nowCard();
+  var inp = $("#simIn");
+  if(inp){
+    if(state.sim !== null){
+      var d = new Date(state.sim + 2 * 3600000);
+      inp.value = d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) + "T" + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes());
+    }
+    inp.addEventListener("change", function(){
+      var m = /^(\d+)-(\d+)-(\d+)T(\d+):(\d+)/.exec(inp.value);
+      if(!m){ return; }
+      state.sim = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4] - 2, +m[5]);
+      var di = liveDayIndex(); if(di >= 0) state.day = di + 1;
+      renderAll();
+    });
+    $("#simClr").addEventListener("click", function(){ state.sim = null; renderAll(); });
+  }
+}
+function renderView(){
+  var v = $("#view"), di = state.day - 1, h = "";
+  if(state.view === "day") h = dayView(di, false);
+  else if(state.view === "two") h = twoView();
+  else if(state.view === "hour") h = hourView(di);
+  else if(state.view === "trip") h = tripView();
+  else h = packView();
+  v.innerHTML = h;
+}
+function renderFoot(){
+  var live = Object.keys(LIVE).map(function(k){ return '<a href="' + LIVE[k][1] + '" target="_blank" rel="noopener">' + LIVE[k][0] + "</a>"; }).join(" · ");
+  $("#foot").innerHTML = "<h3>מקורות והערות</h3><ul>" +
+    SRC.map(function(s){ return '<li><a href="' + s[1] + '" target="_blank" rel="noopener">' + esc(s[0]) + "</a></li>"; }).join("") +
+    "<li>תחזית חיה במפה: " + live + "</li></ul>" +
+    '<p class="muted">' + wxSentence() + ' הלו״ז עצמו נלקח מהקובץ שצורף. המלצות הלבוש, השינה והציוד הן המלצות כלליות ולא חלק מהלו״ז.</p>';
+}
+function renderAll(){ renderBar(); renderNow(); renderView(); }
+function applyTheme(){
+  var r = document.documentElement;
+  if(state.theme) r.setAttribute("data-theme", state.theme); else r.removeAttribute("data-theme");
+  var dark = state.theme === "dark" || (!state.theme && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  $("#themeBtn").textContent = dark ? "מצב בהיר" : "מצב כהה";
+}
+
+load();
+$("#main").innerHTML = '<div id="nowbox"></div><div id="view"></div>';
+var li = liveDayIndex(); if(li >= 0) state.day = li + 1;
+if(state.day < 1 || state.day > 5) state.day = 1;
+applyTheme(); renderAll(); renderFoot();
+try{
+  fetch("weather.json?_=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ if(applyLive(j)){ renderAll(); renderFoot(); } })
+    .catch(function(){});
+}catch(e){}
+
+$("#views").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.view = b.getAttribute("data-v"); save(); renderAll(); window.scrollTo(0, 0);
+});
+$("#days").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.day = +b.getAttribute("data-d"); save(); renderAll();
+});
+$("#tzBtn").addEventListener("click", function(){
+  state.tz = state.tz === "pl" ? "il" : (state.tz === "il" ? "dev" : "pl"); save(); renderAll();
+});
+$("#themeBtn").addEventListener("click", function(){
+  var dark = state.theme === "dark" || (!state.theme && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  state.theme = dark ? "light" : "dark"; save(); applyTheme();
+});
+$("#view").addEventListener("click", function(e){
+  var c = e.target.closest("article[data-d]");
+  if(c){ state.day = +c.getAttribute("data-d"); state.view = "day"; save(); renderAll(); window.scrollTo(0, 0); }
+});
+$("#view").addEventListener("keydown", function(e){
+  if(e.key !== "Enter") return;
+  var c = e.target.closest("article[data-d]");
+  if(c){ state.day = +c.getAttribute("data-d"); state.view = "day"; save(); renderAll(); window.scrollTo(0, 0); }
+});
+$("#view").addEventListener("change", function(e){
+  var k = e.target.getAttribute("data-k"); if(!k) return;
+  state.chk[k] = e.target.checked; save();
+  var n = 0, t = 0;
+  PACK.forEach(function(g){ g.i.forEach(function(x){ t++; if(state.chk[x[0]]) n++; }); });
+  $("#pkc").textContent = n; $("#pkb").style.width = (t ? n / t * 100 : 0) + "%";
+});
+setInterval(function(){ if(state.sim === null){ renderNow(); if(state.view !== "pack") renderView(); } }, 60000);
+</script>
+</body>
+</html>
